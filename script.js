@@ -9,7 +9,7 @@ function checkNews() {
     document.getElementById("loading").style.display = "block";
     document.getElementById("result").innerText = "";
 
-    fetch("http://127.0.0.1:5000/predict", {
+    fetch("https://fakenews-detection-2p89.onrender.com/predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
