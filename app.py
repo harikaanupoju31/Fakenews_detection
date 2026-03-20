@@ -1,32 +1,32 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pickle
 
-app = Flask(__name__, static_folder='.')
-CORS(app)   # 👈 IMPORTANT LINE
+app = Flask(__name__)
+CORS(app)
 
-# Load model
-model = pickle.load(open("model.pkl", "rb"))
-vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+model = None
+vectorizer = None
 
-@app.route('/')
+@app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
+    return "API Running"
 
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
+    global model, vectorizer
+
+    if model is None:
+        model = pickle.load(open("model.pkl", "rb"))
+        vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+
     data = request.get_json()
-    text = data['text']
+    text = data["text"]
 
-    transformed = vectorizer.transform([text])
-    prediction = model.predict(transformed)[0]
+    vect = vectorizer.transform([text])
+    prediction = model.predict(vect)[0]
 
-    if prediction == 1:
-        result = "Real News"
-    else:
-        result = "Fake News"
-
-    return jsonify({"prediction": result})
+    return jsonify({"prediction": prediction})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
