@@ -1,4 +1,5 @@
 function checkNews() {
+
     let text = document.getElementById("newsText").value;
 
     if (text.trim() === "") {
@@ -16,7 +17,12 @@ function checkNews() {
         },
         body: JSON.stringify({ text: text })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+        return response.json();
+    })
     .then(data => {
         document.getElementById("loading").style.display = "none";
 
@@ -31,7 +37,8 @@ function checkNews() {
     })
     .catch(error => {
         document.getElementById("loading").style.display = "none";
-        document.getElementById("result").innerText = "Server Error!";
+        document.getElementById("result").innerText = "⚠️ Server error / Not connected";
+        console.log(error);
     });
 }
 
