@@ -1,32 +1,24 @@
-from flask import Flask, request, jsonify,render_template
-from flask_cors import CORS
+from flask import Flask, request, jsonify, render_template
 import pickle
 
 app = Flask(__name__)
-CORS(app)
 
-model = None
-vectorizer = None
+model = pickle.load(open('model.pkl', 'rb'))
+vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
 
-@app.route("/")
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/predict", methods=["POST"])
+@app.route('/predict', methods=['POST'])
 def predict():
-    global model, vectorizer
-
-    if model is None:
-        model = pickle.load(open("model.pkl", "rb"))
-        vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-
     data = request.get_json()
-    text = data["text"]
+    text = data['text']
 
-    vect = vectorizer.transform([text])
-    prediction = model.predict(vect)[0]
+    vec = vectorizer.transform([text])
+    prediction = model.predict(vec)[0]
 
-    return jsonify({"prediction": prediction})
+    return jsonify({'prediction': str(prediction)})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
