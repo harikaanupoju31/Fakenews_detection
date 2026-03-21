@@ -1,9 +1,9 @@
 async function checkNews() {
-    const text = document.getElementById("newsInput").value;
+    const text = document.getElementById("newsText").value;
 
     document.getElementById("result").innerText = "Checking...";
 
-    const response = await fetch("https://fakenews-detection-2p89.onrender.com/predict", {
+    const response = await fetch("/predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -12,11 +12,10 @@ async function checkNews() {
     });
 
     const data = await response.json();
-
     document.getElementById("result").innerText = data.prediction;
 }
 
 function clearText() {
-    document.getElementById("newsInput").value = "";
+    document.getElementById("newsText").value = "";
     document.getElementById("result").innerText = "";
 }
