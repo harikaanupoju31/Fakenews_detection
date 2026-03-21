@@ -3,7 +3,7 @@ async function checkNews() {
 
     document.getElementById("result").innerText = "Checking...";
 
-    const response = await fetch("/predict", {
+    const response = await fetch("https://fakenews-detector-95lm.onrender.com/predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
